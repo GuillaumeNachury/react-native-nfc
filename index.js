@@ -10,7 +10,8 @@ export const NfcDataType = {
 export const NdefRecordType = {
     TEXT : "TEXT",
     URI : "URI",
-    MIME : "MIME"
+    MIME : "MIME",
+    POSTER : "POSTER"
 };
 
 

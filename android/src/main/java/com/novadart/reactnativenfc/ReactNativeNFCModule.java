@@ -2,10 +2,12 @@ package com.novadart.reactnativenfc;
 
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareClassic;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -25,14 +27,21 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
 
     private static final String EVENT_NFC_DISCOVERED = "__NFC_DISCOVERED";
 
+    private ReactApplicationContext reactContext;
+
+
     // caches the last message received, to pass it to the listeners when it reconnects
     private WritableMap startupNfcData;
     private boolean startupNfcDataRetrieved = false;
 
     private boolean startupIntentProcessed = false;
 
+    private NfcAdapter mNfcAdapter;
+    private MifareClassic tag;
+
     public ReactNativeNFCModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactContext = reactContext;
         reactContext.addActivityEventListener(this);
         reactContext.addLifecycleEventListener(this);
     }
@@ -60,6 +69,7 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
                     Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
                     if (rawMessages != null) {
+
                         NdefMessage[] messages = new NdefMessage[rawMessages.length];
                         for (int i = 0; i < rawMessages.length; i++) {
                             messages[i] = (NdefMessage) rawMessages[i];
@@ -77,6 +87,18 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
 
             }
         }
+    }
+
+    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+        adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
+    }
+
+    public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        adapter.disableForegroundDispatch(activity);
     }
 
     /**
@@ -116,17 +138,19 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
 
     @Override
     public void onHostResume() {
-        if(!startupIntentProcessed){
-            if(getReactApplicationContext().getCurrentActivity() != null){ // it shouldn't be null but you never know
-                // necessary because NFC might cause the activity to start and we need to catch that data too
-                handleIntent(getReactApplicationContext().getCurrentActivity().getIntent(),true);
-            }
-            startupIntentProcessed = true;
+        if (mNfcAdapter != null) {
+            setupForegroundDispatch(getCurrentActivity(), mNfcAdapter);
+        } else {
+            mNfcAdapter = NfcAdapter.getDefaultAdapter(this.reactContext);
         }
     }
 
     @Override
-    public void onHostPause() {}
+    public void onHostPause() {
+        if (mNfcAdapter != null)
+            stopForegroundDispatch(getCurrentActivity(), mNfcAdapter);
+    }
+
 
     @Override
     public void onHostDestroy() {}
