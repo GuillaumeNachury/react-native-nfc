@@ -1,10 +1,54 @@
 {
-  "name": "react-native-nfc",
+  "_args": [
+    [
+      "react-native-nfc@0.3.0",
+      "/Users/sqli51110/Project/RichemontWarranty"
+    ]
+  ],
+  "_from": "react-native-nfc@0.3.0",
+  "_id": "react-native-nfc@0.3.0",
+  "_inBundle": false,
+  "_integrity": "sha1-lcrIdr3ZFKlL1SUUYUP8LWklWQg=",
+  "_location": "/react-native-nfc",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-native-nfc@0.3.0",
+    "name": "react-native-nfc",
+    "escapedName": "react-native-nfc",
+    "rawSpec": "0.3.0",
+    "saveSpec": null,
+    "fetchSpec": "0.3.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-nfc/-/react-native-nfc-0.3.0.tgz",
+  "_spec": "0.3.0",
+  "_where": "/Users/sqli51110/Project/RichemontWarranty",
+  "author": {
+    "name": "Novadart"
+  },
+  "bugs": {
+    "url": "https://github.com/Novadart/react-native-nfc/issues"
+  },
+  "contributors": [
+    {
+      "name": "Giordano Battilana",
+      "email": "giordano.battilana@novadart.com",
+      "url": "giordy"
+    },
+    {
+      "name": "Symous",
+      "url": "https://github.com/Symous"
+    }
+  ],
   "description": "This project has the goal of making it easy (or easier) to scan NFC tags and read the NDEF records they contain",
-  "license": "MIT",
+  "devDependencies": {
+    "react-native": "0.40.0"
+  },
   "homepage": "https://github.com/Novadart/react-native-nfc",
-  "version": "0.3.0",
-  "main": "index.js",
   "keywords": [
     "react-native",
     "nfc",
@@ -12,29 +56,16 @@
     "react",
     "native"
   ],
-  "bugs": {
-    "url": "https://github.com/Novadart/react-native-nfc/issues"
+  "license": "MIT",
+  "main": "index.js",
+  "name": "react-native-nfc",
+  "nativePackage": true,
+  "peerDependencies": {
+    "react-native": ">=0.40.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Novadart/react-native-nfc.git"
   },
-  "devDependencies": {
-    "react-native": "0.40.0"
-  },
-  "peerDependencies": {
-    "react-native": ">=0.40.0"
-  },
-  "nativePackage": true,
-  "author": "Novadart",
-  "contributors": [
-    {
-      "name": "Giordano Battilana (giordy)",
-      "email": "giordano.battilana@novadart.com"
-    },
-    {
-      "name": "Symous",
-      "url": "https://github.com/Symous" 
-    }
-  ]
+  "version": "0.3.0"
 }
