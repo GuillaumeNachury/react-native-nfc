@@ -23,7 +23,7 @@ let listener;
 let _registerToEvents = () => {
     if(!_registeredToEvents){
         NativeModules.ReactNativeNFC.getStartUpNfcData(_notifyListeners);
-         listener = DeviceEventEmitter.addListener('__NFC_DISCOVERED', _notifyListeners);
+         DeviceEventEmitter.addListener('__NFC_DISCOVERED', _notifyListeners);
         _registeredToEvents = true;
     }
 };
@@ -47,8 +47,8 @@ NFC.hasNFC = (callback) => {
   NativeModules.ReactNativeNFC.hasNFC(callback);
 }
 
-NFC.removeAllListeners = () => {
-    if(listener) listener.remove();
+NFC.removeLastListener = () => {
+    if(_listeners.length > 0) _listeners.pop();
 }
 
 export default NFC;
