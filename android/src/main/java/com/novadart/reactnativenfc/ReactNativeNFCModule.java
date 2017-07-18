@@ -118,6 +118,12 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
         } else {
             callback.invoke();
         }
+        if (mNfcAdapter != null) {
+            setupForegroundDispatch(getCurrentActivity(), mNfcAdapter);
+        }
+        else {
+            mNfcAdapter = NfcAdapter.getDefaultAdapter(this.reactContext);
+        }
     }
 
 
