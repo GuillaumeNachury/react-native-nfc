@@ -19,6 +19,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.novadart.reactnativenfc.parser.NdefParser;
 import com.novadart.reactnativenfc.parser.TagParser;
@@ -136,14 +137,37 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
         task.execute(tag);
     }
 
+    @ReactMethod
+    public void hasNFC(Callback callback) {
+        callback.invoke(checkNFC());
+    }
+
+    private boolean checkNFC() {
+        return mNfcAdapter != null && mNfcAdapter.isEnabled();
+    }
+
     @Override
     public void onHostResume() {
         if (mNfcAdapter != null) {
             setupForegroundDispatch(getCurrentActivity(), mNfcAdapter);
-        } else {
+        }
+        else {
             mNfcAdapter = NfcAdapter.getDefaultAdapter(this.reactContext);
         }
+        if (!checkNFC()) {
+            WritableMap noAdapter = new WritableNativeMap();
+            noAdapter.putString("type", "ERROR");
+            noAdapter.putString("message", "NO_ADAPTER_ERROR");
+            sendEvent(noAdapter);
+        }
+        else {
+            WritableMap adapter = new WritableNativeMap();
+            adapter.putString("type", "INFO");
+            adapter.putString("message", "ADAPTER_READY");
+            sendEvent(adapter);
+        }
     }
+
 
     @Override
     public void onHostPause() {
