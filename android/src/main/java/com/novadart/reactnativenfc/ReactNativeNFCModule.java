@@ -163,13 +163,13 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
         if (!checkNFC()) {
             WritableMap noAdapter = new WritableNativeMap();
             noAdapter.putString("type", "ERROR");
-            noAdapter.putString("message", "NO_ADAPTER_ERROR");
+            noAdapter.putString("description", "NO_ADAPTER_ERROR");
             sendEvent(noAdapter);
         }
         else {
             WritableMap adapter = new WritableNativeMap();
             adapter.putString("type", "INFO");
-            adapter.putString("message", "ADAPTER_READY");
+            adapter.putString("description", "ADAPTER_READY");
             sendEvent(adapter);
         }
     }
