@@ -75,7 +75,8 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
                         for (int i = 0; i < rawMessages.length; i++) {
                             messages[i] = (NdefMessage) rawMessages[i];
                         }
-                        processNdefMessages(messages,startupIntent);
+                        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                        processNdefMessages(messages,tag,startupIntent);
                     }
                     break;
 
@@ -133,9 +134,9 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
                 .emit(EVENT_NFC_DISCOVERED, payload); }
 
 
-    private void processNdefMessages(NdefMessage[] messages, boolean startupIntent){
+    private void processNdefMessages(NdefMessage[] messages, Tag tag boolean startupIntent){
         NdefProcessingTask task = new NdefProcessingTask(startupIntent);
-        task.execute(messages);
+        task.execute(messages, tag);
     }
 
     private void processTag(Tag tag, boolean startupIntent){
@@ -186,7 +187,7 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
     public void onHostDestroy() {}
 
 
-    private class NdefProcessingTask extends AsyncTask<NdefMessage[],Void,WritableMap> {
+    private class NdefProcessingTask extends AsyncTask<Object,Void,WritableMap> {
 
         private final boolean startupIntent;
 
@@ -195,9 +196,13 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
         }
 
         @Override
-        protected WritableMap doInBackground(NdefMessage[]... params) {
-            NdefMessage[] messages = params[0];
-            return NdefParser.parse(messages);
+        protected WritableMap doInBackground(Object... params) {
+            NdefMessage[] messages = (NdefMessage[])params[0];
+            Tag tag = (Tag)params[1];
+            WritableMap parsedNdef = NdefParser.parse(messages);
+            WritableMap parsedTag = TagParser.parse(tag);
+            parsedNdef.putString(“tagUid”, parsedTag.getMap(“data”).getString(“id”));
+            return parsedNdef;
         }
 
         @Override
