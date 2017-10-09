@@ -134,7 +134,7 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
                 .emit(EVENT_NFC_DISCOVERED, payload); }
 
 
-    private void processNdefMessages(NdefMessage[] messages, Tag tag boolean startupIntent){
+    private void processNdefMessages(NdefMessage[] messages, Tag tag, boolean startupIntent){
         NdefProcessingTask task = new NdefProcessingTask(startupIntent);
         task.execute(messages, tag);
     }
@@ -201,7 +201,7 @@ public class ReactNativeNFCModule extends ReactContextBaseJavaModule implements 
             Tag tag = (Tag)params[1];
             WritableMap parsedNdef = NdefParser.parse(messages);
             WritableMap parsedTag = TagParser.parse(tag);
-            parsedNdef.putString(“tagUid”, parsedTag.getMap(“data”).getString(“id”));
+            parsedNdef.putString("tagUid", parsedTag.getMap("data").getString("id"));
             return parsedNdef;
         }
 
